@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//Route::post('register','')
+Route::group([
+    'prefix' => 'f-chat'
+],function (){
+    Route::post('/send-message',[\App\Http\Controllers\UserController::class,'sendMessage']);
 });
+
+Route::post('/register',[\App\Http\Controllers\UserController::class,'register']); //đăng ký user
+Route::get('/connect',[\App\Http\Controllers\UserController::class,'connect']);
+Route::get('/disconnect',[\App\Http\Controllers\UserController::class,'disconnect']);
+
