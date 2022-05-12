@@ -25,8 +25,8 @@ class UserService
     public function create(array $params): ApiResponse
     {
         $params['password'] = Hash::make("chatbot");
-        if ($params['gender'] === "Anh") $params['gender'] = "MALE";
-        if ($params['gender'] === "Chị") $params['gender'] = "FEMALE";
+        if ($params['gender'] === "Anh" || $params['gender']==="male") $params['gender'] = "MALE";
+        if ($params['gender'] === "Chị" || $params['gender']==="female") $params['gender'] = "FEMALE";
         if (empty($params['gender']) || ($params['gender'] == "MALE" && $params['gender'] !== "FEMALE")) $params['gender'] = "MALE";
         $user = $this->userRepository->updateOrCreate([
             'fb_uid' => $params['fb_uid']
