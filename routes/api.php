@@ -25,4 +25,4 @@ Route::group([
 Route::post('/register',[\App\Http\Controllers\UserController::class,'register']); //đăng ký user
 Route::post('/connect',[\App\Http\Controllers\UserController::class,'connect']);
 Route::post('/disconnect',[\App\Http\Controllers\UserController::class,'disconnect']);
-
+Route::post('/log-webhook',[\App\Http\Controllers\UserController::class,'logWebhook']);

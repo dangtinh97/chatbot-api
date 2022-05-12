@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Helpers\FChatHelper;
 use App\Http\Requests\FbUidRequest;
 use App\Http\Requests\FChatRegisterRequest;
+use App\Http\Responses\ResponseSuccess;
 use App\Http\Services\UserService;
+use App\Models\Log;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -39,6 +41,14 @@ class UserController extends Controller
     {
         $send = $this->userService->sendMessage($request->get('fb_uid'),$request->get('message'));
         return response()->json($send);
+    }
+
+    function logWebhook(Request $request)
+    {
+        Log::query()->create([
+            'data' => json_encode($request->toArray())
+        ]);
+        return response()->json((new ResponseSuccess())->toArray());
     }
 
 }
