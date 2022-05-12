@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\FChatHelper;
+use App\Http\Requests\FbUidRequest;
 use App\Http\Requests\FChatRegisterRequest;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
@@ -22,19 +23,19 @@ class UserController extends Controller
         return response()->json($create->toArray());
     }
 
-    function connect(Request $request)
+    function connect(FbUidRequest $request)
     {
         $connect = $this->userService->connect($request->get('fb_uid'));
         return response()->json($connect);
     }
 
-    function disconnect(Request $request)
+    function disconnect(FbUidRequest $request)
     {
         $disconnect = $this->userService->disconnect($request->get('fb_uid'));
         return response()->json($disconnect);
     }
 
-    function sendMessage(Request $request)
+    function sendMessage(FbUidRequest $request)
     {
         $send = $this->userService->sendMessage($request->get('fb_uid'),$request->get('message'));
         return response()->json($send);
