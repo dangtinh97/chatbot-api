@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 
 class FChatController extends Controller
 {
-    function register(FChatRegisterRequest $request)
+    function testApi(Request $request)
     {
-
+        return response()->json([
+           [
+               'text' => "ĐÂY LÀ API ĐỂ TEST\n".date('Y/m/d H:i:s',time())
+           ]
+        ]);
     }
 }

@@ -19,6 +19,7 @@ Route::group([
     'prefix' => 'f-chat'
 ],function (){
     Route::post('/send-message',[\App\Http\Controllers\UserController::class,'sendMessage']);
+    Route::get('/test-json',[\App\Http\Controllers\FChatController::class,'testApi']);
 });
 
 Route::post('/register',[\App\Http\Controllers\UserController::class,'register']); //đăng ký user
