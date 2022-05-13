@@ -44,7 +44,6 @@ class FacebookService
         $text = trim($messaging['message']['text']?? "");
         $resultText = $this->detectMessage($text);
         if($text==="#help") return $this->defaultAns($user);
-        dd($text);
         if($resultText==="connect") return $this->connect($user);
         if($resultText==="disconnect") return $this->disconnect($user);
         if($resultText==="text") return $this->sendMessageText($user,$text);
