@@ -36,11 +36,15 @@ class FacebookService
             $this->createConnect($user->id);
             $user = $this->userRepository->findOrCreateUser($senderId);
         }
+
+        if(isset($messaging['postback'])) return $this->messagePostback($user,$messaging['postback']);
+
         $attachment = $messaging['message']['attachments'][0] ?? [];
         if(count($attachment)!==0) return $this->sendAttachment($attachment,$user);
         $text = trim($messaging['message']['text']?? "");
         $resultText = $this->detectMessage($text);
         if($text==="#help") return $this->defaultAns($user);
+        dd($text);
         if($resultText==="connect") return $this->connect($user);
         if($resultText==="disconnect") return $this->disconnect($user);
         if($resultText==="text") return $this->sendMessageText($user,$text);
@@ -48,12 +52,19 @@ class FacebookService
         return new ResponseSuccess();
     }
 
+    public function messagePostback($user,$postback)
+    {
+        if($postback['title']==="Get Started") return $this->defaultAns($user);
+        if($postback['payload']==="CONNECT") return $this->connect($user);
+        if($postback['payload']==="DISCONNECT") return $this->disconnect($user);
+    }
+
     public function sendMessageText($user,$message):ApiResponse
     {
         $connect = $user->connect;
         if(is_null($connect) || $connect->status!==Connect::STATUS_BUSY){
             $this->defaultAns($user);
-            return (new ResponseSuccess([],200,"Gửi tin nhắn mặc định"));
+            return (new ResponseSuccess([],200,"Gửi tin nhắn mặc định."));
         }
         $userConnected = $this->connectRepository->findOne([
             'to_user_id' => $connect->from_user_id
@@ -64,10 +75,30 @@ class FacebookService
 
     public function defaultAns($user)
     {
-        $text = "📣 Chào bạn, đây là tin nhắn mặc định\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
+        $text = "Chào bạn, đây là tin nhắn mặc định\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
     \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản. gửi hình ảnh.\nChú ý, Hiện giờ chúng tớ vẫn chưa thể gửi tin nhắn quá 24h, vì vậy các bạn cần nhắn tin trong vòng 24h";
-        FChatHelper::sendMessageText($user->fb_uid,$text);
+
+        $message = $this->buttonMenu($text);
+
+        FChatHelper::sendMessageText($user->fb_uid,$message);
         return new ResponseSuccess();
+    }
+
+    public function buttonMenu($text):array
+    {
+        return [
+            "attachment" => [
+                'type' => 'template',
+                'payload' => [
+                    'template_type' => 'button',
+                    'text' => "📣 ".$text,
+                    'buttons' => [
+                        FChatHelper::buttonConnect(),
+                        FChatHelper::buttonDisconnect(),
+                    ]
+                ]
+            ]
+        ];
     }
 
     public function connect($user):ApiResponse
@@ -75,12 +106,12 @@ class FacebookService
         $connect = $user->connect;
         $status = $connect->status;
         if($connect->status===Connect::STATUS_BUSY){
-            FChatHelper::sendMessageText($user->fb_uid,"Bạn đang trong cuộc trò chuyện với ai đó.");
+            FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Bạn đang trong cuộc trò chuyện với ai đó."));
             return new ResponseSuccess([],200,"Bạn đang trong cuộc trò chuyện với ai đó.");
         }
 
         if($connect->status===Connect::STATUS_FIND){
-            FChatHelper::sendMessageText($user->fb_uid,"Bạn đang trong hàng đợi.");
+            FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Bạn đang trong hàng đợi."));
             return new ResponseSuccess([],200,"Bạn đang trong hàng đợi.");
         }
         $connect->update([
@@ -88,15 +119,15 @@ class FacebookService
         ]);
         $userFind = $this->connectRepository->userFindConnectAndSetBusy($user->id);
         if (is_null($userFind)){
-            FChatHelper::sendMessageText($user->fb_uid,"Chúng tớ đang tìm người phù hợp với bạn!");
+            FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Chúng tớ đang tìm người phù hợp với bạn!"));
             return new ResponseSuccess([],200,"Chúng tớ đang tìm người phù hợp với bạn!");
         }
         $connect->update([
             'status' => Connect::STATUS_BUSY,
             'to_user_id' => $userFind->from_user_id
         ]);
-        FChatHelper::sendMessageText($user->fb_uid,"Bạn đã được kết nối với người lạ!");
-        FChatHelper::sendMessageText($userFind->user->fb_uid,"Bạn đã được kết nối với người lạ!");
+        FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Bạn đã được kết nối với người lạ!"));
+        FChatHelper::sendMessageText($userFind->user->fb_uid,$this->buttonMenu("Bạn đã được kết nối với người lạ!"));
         return new ResponseSuccess([],200,"Bạn đã được kết nối với người lạ!");
     }
 
@@ -105,7 +136,7 @@ class FacebookService
         $userIdMe = $user->id;
         $connect = $user->connect;
         if ($connect->status === Connect::STATUS_FREE){
-             FChatHelper::sendMessageText($user->fb_uid,"Bạn chưa kết nối với ai!");
+             FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Bạn chưa kết nối với ai!"));
              return new ResponseSuccess([],200,"Bạn chưa kết nối với ai!");
         }
         $status = $connect->status;
@@ -114,7 +145,7 @@ class FacebookService
             'status' => Connect::STATUS_FREE
         ]);
         if ($status === Connect::STATUS_FIND){
-            FChatHelper::sendMessageText($user->fb_uid,"Bạn đã rời khỏi hàng đợi!");
+            FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Bạn đã rời khỏi hàng đợi!"));
             return new ResponseSuccess([],200,"Bạn đã rời khỏi hàng đợi!");
         }
 
@@ -122,14 +153,14 @@ class FacebookService
             'to_user_id' => $userIdMe
         ]);
         if(!is_null($userConnected)){
-            FChatHelper::sendMessageText($userConnected->user->fb_uid, "Người lạ đã ngắt kết nối với bạn.");
+            FChatHelper::sendMessageText($userConnected->user->fb_uid, $this->buttonMenu("Người lạ đã ngắt kết nối với bạn."));
             $userConnected->update([
                 'status' => Connect::STATUS_FREE,
                 'to_user_id' => null
             ]);
         }
 
-        FChatHelper::sendMessageText($user->fb_uid,"Bạn đã ngắt kết nối với người lạ!");
+        FChatHelper::sendMessageText($user->fb_uid,$this->buttonMenu("Bạn đã ngắt kết nối với người lạ!"));
         return new ResponseSuccess([],200,"Bạn đã ngắt kết nối với người lạ!");
     }
 

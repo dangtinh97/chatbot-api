@@ -61,6 +61,15 @@ class FChatHelper
         }else{
             $send = $content;
         }
+
+        $body = [
+//                "messaging_type" => "UPDATE",
+            "recipient" => [
+                "id" => $to
+            ],
+            "message" => $send
+        ];
+
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -72,13 +81,7 @@ class FChatHelper
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode([
-                "messaging_type" => "UPDATE",
-                "recipient" => [
-                    "id" => $to
-                ],
-                "message" => $send
-            ]),
+            CURLOPT_POSTFIELDS => json_encode($body),
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
             ),
@@ -87,6 +90,7 @@ class FChatHelper
         $arr = json_decode($response,true);
         if(isset($arr['error']))
         {
+//            dd($response);
 //            Mail::to(User::query()->where([
 //                'fb_uid' => '1343954529053153'
 //            ])->first())->send(new ErrorSendMessagePage($response));
@@ -102,5 +106,23 @@ class FChatHelper
             'csvn', 'dit', 'địt', 'lồn', 'buồi', 'giết', 'đcm', 'dcm', 'sex', 'vcl', 'dcm', 'đcm', 'đảng cộng sản', 'dang cong san',
             'giet',
         ], "***", $str);
+    }
+
+    public static function buttonConnect():array
+    {
+        return [
+            'type' => "postback",
+            'title' => "Tìm người lạ",
+            'payload' => 'CONNECT'
+        ];
+    }
+
+    public static function buttonDisconnect():array
+    {
+        return [
+            'type' => "postback",
+            'title' => "Ngắt kết nối",
+            'payload' => 'DISCONNECT'
+        ];
     }
 }
