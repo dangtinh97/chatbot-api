@@ -64,7 +64,8 @@ class FacebookService
 
     public function defaultAns($user)
     {
-        $text = "Chào bạn, đây là tin nhắn mặc định\n- gõ #help để xem hướng dẫn\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.";
+        $text = "Chào bạn, đây là tin nhắn mặc định\n- gõ #help để xem hướng dẫn\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
+    \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản.";
         FChatHelper::sendMessageText($user->fb_uid,$text);
         return new ResponseSuccess();
     }
@@ -154,6 +155,8 @@ class FacebookService
 
     public function sendAttachment(array $attachment,$user):ApiResponse
     {
+        $text = "Rất tiếc chúng tớ chưa hỗ trợ gửi ảnh, voice, nhưng chúng tớ đang phát triển nó rồi nhé.";
+        FChatHelper::sendMessageText($user->fb_uid,$text);
         return new ResponseSuccess();
     }
 
