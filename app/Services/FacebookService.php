@@ -40,6 +40,7 @@ class FacebookService
         if(count($attachment)!==0) return $this->sendAttachment($attachment,$user);
         $text = trim($messaging['message']['text']?? "");
         $resultText = $this->detectMessage($text);
+        if($text==="#help") return $this->defaultAns($user);
         if($resultText==="connect") return $this->connect($user);
         if($resultText==="disconnect") return $this->disconnect($user);
         if($resultText==="text") return $this->sendMessageText($user,$text);
