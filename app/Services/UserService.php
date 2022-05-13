@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use App\Helpers\FChatHelper;
 use App\Http\Responses\ApiResponse;
@@ -109,7 +109,6 @@ class UserService
         ]);
         if(is_null($user)) return $this->newRegister();
         $connect = $user->connect;
-
         if(is_null($connect) || $connect->status!==Connect::STATUS_BUSY) return ((new ResponseError('no connect',201))->toArray());
         $userConnected = $this->connectRepository->findOne([
             'to_user_id' => $connect->from_user_id

@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\FChatHelper;
 use App\Http\Requests\FbUidRequest;
 use App\Http\Requests\FChatRegisterRequest;
-use App\Http\Responses\ResponseSuccess;
-use App\Http\Services\UserService;
-use App\Models\Log;
+use App\Services\FacebookService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public $userService;
-    public function __construct(UserService $userService)
+    protected $facebookService;
+    public function __construct(UserService $userService,FacebookService $facebookService)
     {
         $this->userService = $userService;
+        $this->facebookService  =$facebookService;
     }
 
 
@@ -43,12 +43,11 @@ class UserController extends Controller
         return response()->json($send);
     }
 
-    function logWebhook(Request $request)
+    function webhook(Request $request)
     {
-        Log::query()->create([
-            'data' => json_encode($request->toArray())
-        ]);
-        return response()->json((new ResponseSuccess())->toArray());
+        $data = $request->toArray();
+        $process = $this->facebookService->webHook($data);
+        return response()->json($process->toArray());
     }
 
 }

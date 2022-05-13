@@ -15,14 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Route::post('register','')
-Route::group([
-    'prefix' => 'f-chat'
-],function (){
-    Route::post('/send-message',[\App\Http\Controllers\UserController::class,'sendMessage']);
-    Route::get('/test-json',[\App\Http\Controllers\FChatController::class,'testApi']);
-});
-
-Route::post('/register',[\App\Http\Controllers\UserController::class,'register']); //đăng ký user
-Route::post('/connect',[\App\Http\Controllers\UserController::class,'connect']);
-Route::post('/disconnect',[\App\Http\Controllers\UserController::class,'disconnect']);
-Route::post('/log-webhook',[\App\Http\Controllers\UserController::class,'logWebhook']);
+Route::post('/webhook',[\App\Http\Controllers\UserController::class,'webhook']);
