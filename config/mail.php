@@ -42,6 +42,8 @@ return [
             'username' => env('MAIL_USERNAME'),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
+            'service'=>'gmail',
+            'secure' =>false,
             'auth_mode' => null,
         ],
 

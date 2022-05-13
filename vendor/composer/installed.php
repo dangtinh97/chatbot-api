@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0cdc7cf2bc52ed93c7c2dd4f46d2b6e98786932d',
+        'reference' => 'f605aab72b008f8af207122c1ee2ffa75b57114b',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -400,7 +400,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0cdc7cf2bc52ed93c7c2dd4f46d2b6e98786932d',
+            'reference' => 'f605aab72b008f8af207122c1ee2ffa75b57114b',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -579,6 +579,18 @@
             'aliases' => array(),
             'reference' => '4f7fd7836c6f332bb2933569e566a0d6c4cbed74',
             'dev_requirement' => true,
+        ),
+        'php-http/async-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '*',
+            ),
+        ),
+        'php-http/client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '*',
+            ),
         ),
         'phpdocumentor/reflection-common' => array(
             'pretty_version' => '2.2.0',
@@ -1049,6 +1061,30 @@
             'reference' => '9b630f3427f3ebe7cd346c277a1408b00249dad9',
             'dev_requirement' => false,
         ),
+        'symfony/http-client' => array(
+            'pretty_version' => 'v5.4.8',
+            'version' => '5.4.8.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/http-client',
+            'aliases' => array(),
+            'reference' => '0dabec4e3898d3e00451dd47b5ef839168f9bbf5',
+            'dev_requirement' => false,
+        ),
+        'symfony/http-client-contracts' => array(
+            'pretty_version' => 'v2.5.1',
+            'version' => '2.5.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/http-client-contracts',
+            'aliases' => array(),
+            'reference' => '1a4f708e4e87f335d1b1be6148060739152f0bd5',
+            'dev_requirement' => false,
+        ),
+        'symfony/http-client-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '2.4',
+            ),
+        ),
         'symfony/http-foundation' => array(
             'pretty_version' => 'v5.4.8',
             'version' => '5.4.8.0',
@@ -1065,6 +1101,15 @@
             'install_path' => __DIR__ . '/../symfony/http-kernel',
             'aliases' => array(),
             'reference' => 'cf7e61106abfc19b305ca0aedc41724ced89a02a',
+            'dev_requirement' => false,
+        ),
+        'symfony/mailer' => array(
+            'pretty_version' => 'v5.4.8',
+            'version' => '5.4.8.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/mailer',
+            'aliases' => array(),
+            'reference' => 'c6e7aa958cb2884d68562264f421ffea59cdad41',
             'dev_requirement' => false,
         ),
         'symfony/mime' => array(
@@ -1164,6 +1209,15 @@
             'install_path' => __DIR__ . '/../symfony/polyfill-php81',
             'aliases' => array(),
             'reference' => '5de4ba2d41b15f9bd0e19b2ab9674135813ec98f',
+            'dev_requirement' => false,
+        ),
+        'symfony/postmark-mailer' => array(
+            'pretty_version' => 'v5.4.7',
+            'version' => '5.4.7.0',
+            'type' => 'symfony-mailer-bridge',
+            'install_path' => __DIR__ . '/../symfony/postmark-mailer',
+            'aliases' => array(),
+            'reference' => 'dbc83bac6fa0fe0badbf8b0f354fc65be2509545',
             'dev_requirement' => false,
         ),
         'symfony/process' => array(

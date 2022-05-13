@@ -64,8 +64,8 @@ class FacebookService
 
     public function defaultAns($user)
     {
-        $text = "Chào bạn, đây là tin nhắn mặc định\n- gõ #help để xem hướng dẫn\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
-    \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản.";
+        $text = "📣 Chào bạn, đây là tin nhắn mặc định\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
+    \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản. gửi hình ảnh.\nChú ý, Hiện giờ chúng tớ vẫn chưa thể gửi tin nhắn quá 24h, vì vậy các bạn cần nhắn tin trong vòng 24h";
         FChatHelper::sendMessageText($user->fb_uid,$text);
         return new ResponseSuccess();
     }
@@ -155,9 +155,19 @@ class FacebookService
 
     public function sendAttachment(array $attachment,$user):ApiResponse
     {
-        $text = "Rất tiếc chúng tớ chưa hỗ trợ gửi ảnh, voice, nhưng chúng tớ đang phát triển nó rồi nhé.";
-        FChatHelper::sendMessageText($user->fb_uid,$text);
-        return new ResponseSuccess();
+        $attachment['payload']['is_reusable']  =true;
+        $connect = $user->connect;
+        if(is_null($connect) || $connect->status!==Connect::STATUS_BUSY){
+            $this->defaultAns($user);
+            return (new ResponseSuccess([],200,"Gửi tin nhắn mặc định"));
+        }
+        $userConnected = $this->connectRepository->findOne([
+            'to_user_id' => $connect->from_user_id
+        ]);
+        FChatHelper::sendMessageText($userConnected->user->fb_uid, [
+            'attachment' => $attachment
+        ]);
+        return ((new ResponseSuccess([],200,"SEND MESSAGE ATTACHMENT SUCCESS")));
     }
 
 }

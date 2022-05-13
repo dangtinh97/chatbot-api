@@ -2,7 +2,10 @@
 
 namespace App\Helpers;
 
+use App\Mail\ErrorSendMessagePage;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class FChatHelper
 {
@@ -50,9 +53,16 @@ class FChatHelper
 
     public static function sendMessageText($to, $content)
     {
+        $send = [];
+        if(gettype($content)!=="array"){
+            $send = [
+                "text" => (string)$content
+            ];
+        }else{
+            $send = $content;
+        }
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
         $curl = curl_init();
-
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://graph.facebook.com/v13.0/me/messages?access_token=' . $tokenPage,
             CURLOPT_RETURNTRANSFER => true,
@@ -67,25 +77,30 @@ class FChatHelper
                 "recipient" => [
                     "id" => $to
                 ],
-                "message" => [
-                    "text" => $content
-                ]
+                "message" => $send
             ]),
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
             ),
         ));
-
         $response = curl_exec($curl);
-
+        $arr = json_decode($response,true);
+        if(isset($arr['error']))
+        {
+//            Mail::to(User::query()->where([
+//                'fb_uid' => '1343954529053153'
+//            ])->first())->send(new ErrorSendMessagePage($response));
+        }
         curl_close($curl);
         return $response;
     }
 
     public static function replaceBadWord(string $str)
     {
+
         return str_replace([
-            'csvn', 'dit', 'địt', 'lồn', 'buồi', 'giết', 'đcm', 'dcm', 'sex', 'vcl', 'dcm', 'đcm', 'đảng cộng sản', 'dang cong san'
+            'csvn', 'dit', 'địt', 'lồn', 'buồi', 'giết', 'đcm', 'dcm', 'sex', 'vcl', 'dcm', 'đcm', 'đảng cộng sản', 'dang cong san',
+            'giet',
         ], "***", $str);
     }
 }
