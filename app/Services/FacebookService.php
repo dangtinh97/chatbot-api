@@ -40,7 +40,7 @@ class FacebookService
         if(isset($messaging['postback'])) return $this->messagePostback($user,$messaging['postback']);
 
         $attachment = $messaging['message']['attachments'][0] ?? [];
-        if(count($attachment)!==0) return $this->sendAttachment($attachment,$user);
+        if(count($attachment)!==0 && empty($text)) return $this->sendAttachment($attachment,$user);
         $text = trim($messaging['message']['text']?? "");
         $resultText = $this->detectMessage($text);
         if($text==="#help") return $this->defaultAns($user);
