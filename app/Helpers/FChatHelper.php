@@ -63,7 +63,7 @@ class FChatHelper
         }
 
         $body = [
-//                "messaging_type" => "UPDATE",
+                "messaging_type" => "UPDATE",
             "recipient" => [
                 "id" => $to
             ],
