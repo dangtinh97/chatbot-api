@@ -56,6 +56,7 @@ class FacebookService
         if($postback['title']==="Get Started" || $postback['title']==="Get started") return $this->defaultAns($user);
         if($postback['payload']==="CONNECT") return $this->connect($user);
         if($postback['payload']==="DISCONNECT") return $this->disconnect($user);
+        return $this->defaultAns($user);
     }
 
     public function sendMessageText($user,$message):ApiResponse
