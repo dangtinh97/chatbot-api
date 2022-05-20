@@ -63,13 +63,15 @@ class FChatHelper
         }
 
         $body = [
-                "messaging_type" => "UPDATE",
+//                "messaging_type" => "UPDATE",
             "recipient" => [
                 "id" => $to
             ],
             "message" => $send
         ];
 
+//        if(gettype($content)==="string") $body['messaging_type'] = 'MESSAGE_TAG';
+//        dd($body);
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
         $curl = curl_init();
         curl_setopt_array($curl, array(

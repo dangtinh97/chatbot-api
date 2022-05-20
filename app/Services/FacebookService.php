@@ -53,7 +53,7 @@ class FacebookService
 
     public function messagePostback($user,$postback)
     {
-        if($postback['title']==="Get Started") return $this->defaultAns($user);
+        if($postback['title']==="Get Started" || $postback['title']==="Get started") return $this->defaultAns($user);
         if($postback['payload']==="CONNECT") return $this->connect($user);
         if($postback['payload']==="DISCONNECT") return $this->disconnect($user);
     }
