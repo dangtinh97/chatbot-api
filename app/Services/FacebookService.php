@@ -37,6 +37,10 @@ class FacebookService
             $user = $this->userRepository->findOrCreateUser($senderId);
         }
 
+//        FChatHelper::sendMessageText($senderId, FChatHelper::replaceBadWord("test tin nhắn"));
+//        dd("a");
+//        return $this->defaultAns($user);
+
         if(isset($messaging['postback'])) return $this->messagePostback($user,$messaging['postback']);
         $text = trim($messaging['message']['text']?? "");
         $attachment = $messaging['message']['attachments'][0] ?? [];
@@ -61,6 +65,7 @@ class FacebookService
 
     public function sendMessageText($user,$message):ApiResponse
     {
+        $message = str_replace(['https://','http://'],'',$message);
         $connect = $user->connect;
         if(is_null($connect) || $connect->status!==Connect::STATUS_BUSY){
             $this->defaultAns($user);
@@ -76,11 +81,11 @@ class FacebookService
     public function defaultAns($user)
     {
         $text = "Chào bạn, đây là tin nhắn mặc định\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
-    \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản. gửi hình ảnh.\nChú ý, Hiện giờ chúng tớ vẫn chưa thể gửi tin nhắn quá 24h, vì vậy các bạn cần nhắn tin trong vòng 24h";
+    \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản. gửi hình ảnh.\n- 21/05/2022 Chúng tớ đã update có thể gửi tin nhắn liên tục ngoài 24h";
 
         $message = $this->buttonMenu($text);
 
-        FChatHelper::sendMessageText($user->fb_uid,$message);
+        $send = FChatHelper::sendMessageText($user->fb_uid,$message);
         return new ResponseSuccess();
     }
 

@@ -69,8 +69,8 @@ class FChatHelper
             ],
             "message" => $send
         ];
-
-//        if(gettype($content)==="string") $body['messaging_type'] = 'MESSAGE_TAG';
+        $body['messaging_type'] = 'MESSAGE_TAG';
+        $body['tag'] = "CONFIRMED_EVENT_UPDATE";
 //        dd($body);
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
         $curl = curl_init();
