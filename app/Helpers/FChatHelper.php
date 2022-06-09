@@ -93,6 +93,7 @@ class FChatHelper
         if(isset($arr['error']))
         {
 //            dd($response);
+//            dd($response);
 //            Mail::to(User::query()->where([
 //                'fb_uid' => '1343954529053153'
 //            ])->first())->send(new ErrorSendMessagePage($response));
@@ -125,6 +126,40 @@ class FChatHelper
             'type' => "postback",
             'title' => "Ngắt kết nối",
             'payload' => 'DISCONNECT'
+        ];
+    }
+
+    public static function gameOanTuTi():array
+    {
+        return [
+            'type' => "postback",
+            'title' => "Chơi oẳn tù tì",
+            'payload' => 'OAN_TU_TI'
+        ];
+    }
+
+    //quick_replies
+    public static function quickReplies(string $text,array $replies):array
+    {
+        return [
+            "text" => $text,
+            "quick_replies" => array_map(function ($reply){
+                return [
+                    "content_type" => "text",
+                    "title" => $reply['title'],
+                    'payload' => $reply['payload']
+                ];
+            },$replies)
+        ];
+    }
+
+
+    public static function buttonUrl(string $url,string $title):array
+    {
+        return [
+            'type'=>'web_url',
+            'url'=> $url,
+            'title' => $title
         ];
     }
 }
