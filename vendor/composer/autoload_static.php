@@ -559,6 +559,7 @@ class ComposerStaticInit1995edbfd4e0398e6ad66402a8585ad5
         'App\\Http\\Responses\\ResponseCustomize' => __DIR__ . '/../..' . '/app/Http/Responses/ResponseCustomize.php',
         'App\\Http\\Responses\\ResponseError' => __DIR__ . '/../..' . '/app/Http/Responses/ResponseError.php',
         'App\\Http\\Responses\\ResponseSuccess' => __DIR__ . '/../..' . '/app/Http/Responses/ResponseSuccess.php',
+        'App\\Mail\\ErrorSendMessagePage' => __DIR__ . '/../..' . '/app/Mail/ErrorSendMessagePage.php',
         'App\\Models\\Connect' => __DIR__ . '/../..' . '/app/Models/Connect.php',
         'App\\Models\\Log' => __DIR__ . '/../..' . '/app/Models/Log.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',

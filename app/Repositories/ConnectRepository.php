@@ -12,7 +12,7 @@ class ConnectRepository extends BaseRepository
         parent::__construct($model);
     }
 
-    public function userFindConnectAndSetBusy(int $userId)
+    public function userFindConnectAndSetBusy(int $userId,$uuid="")
     {
         $q = $this->model::query();
         $q->where('status','=',Connect::STATUS_FIND)
@@ -21,7 +21,8 @@ class ConnectRepository extends BaseRepository
         if(!is_null($userFind)){
             $userFind->update([
                 'status' => Connect::STATUS_BUSY,
-                'to_user_id' => $userId
+                'to_user_id' => $userId,
+                'room_uuid' => $uuid
             ]);
         }
         return $userFind;

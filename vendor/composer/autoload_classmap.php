@@ -29,6 +29,7 @@ return array(
     'App\\Http\\Responses\\ResponseCustomize' => $baseDir . '/app/Http/Responses/ResponseCustomize.php',
     'App\\Http\\Responses\\ResponseError' => $baseDir . '/app/Http/Responses/ResponseError.php',
     'App\\Http\\Responses\\ResponseSuccess' => $baseDir . '/app/Http/Responses/ResponseSuccess.php',
+    'App\\Mail\\ErrorSendMessagePage' => $baseDir . '/app/Mail/ErrorSendMessagePage.php',
     'App\\Models\\Connect' => $baseDir . '/app/Models/Connect.php',
     'App\\Models\\Log' => $baseDir . '/app/Models/Log.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',

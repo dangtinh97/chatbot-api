@@ -10,6 +10,7 @@ use App\Models\Connect;
 use App\Repositories\ConnectRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -47,6 +48,7 @@ class UserService
 
     public function connect(string $fbUid): array
     {
+        $uuid = Str::uuid();
         $user = $this->userRepository->findOne([
             'fb_uid' => $fbUid
         ]);
@@ -61,7 +63,8 @@ class UserService
         if (is_null($userFind)) return FChatHelper::responseText("Chúng tớ đang tìm người phù hợp với bạn!");
         $connect->update([
             'status' => Connect::STATUS_BUSY,
-            'to_user_id' => $userFind->from_user_id
+            'to_user_id' => $userFind->from_user_id,
+            'room_uuid' => $uuid
         ]);
         FChatHelper::sendMessage($userFind->user->fb_uid,"Bạn đã được kết nối với người lạ!");
         return FChatHelper::responseText("Bạn đã được kết nối với người lạ!");
