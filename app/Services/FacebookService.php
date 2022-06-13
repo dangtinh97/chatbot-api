@@ -23,6 +23,7 @@ class FacebookService
     protected $oanTuTiRepository;
     /** @var User $user */
     private $user;
+    public $fbUid;
     public function __construct(LogRepository $logRepository,UserRepository $userRepository,ConnectRepository $connectRepository,OanTuTiRepository $oanTuTiRepository)
     {
         $this->logRepository = $logRepository;
@@ -39,6 +40,7 @@ class FacebookService
         if($data['object']!=="page") return new ResponseError();
         $messaging = $data['entry'][0]['messaging'][0];
         $senderId = $messaging['sender']['id'];
+        $this->fbUid = $senderId;
         $user = $this->userRepository->findOrCreateUser($senderId);
         if ($user->created_at->__toString() === $user->updated_at->__toString()){
             $this->createConnect($user->id);
@@ -247,7 +249,7 @@ class FacebookService
         $buttons = [
             FChatHelper::buttonConnect(),
             FChatHelper::buttonDisconnect(),
-            FChatHelper::buttonUrl("https://shopee.vn/shop5nangtien","Chi tiết sản phẩm")
+            FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot")
         ];
         $attachments =  [
             "attachment" => [
@@ -257,11 +259,11 @@ class FacebookService
                     'elements' => [
                         [
                             "title" => $text,
-                            'image_url' => $item['image'],
-                            'subtitle' => "QC: ".$item['name']."\nGiá:".$item['price'],
+                            'image_url' => "https://thientue.vn/images/tarot/tarot-card.png",//$item['image'],
+                            'subtitle' => "Bói tarot hôm nay",//,"QC: ".$item['name']."\nGiá:".$item['price'],
                             'default_action' => [
                                 'type' => "web_url",
-                                'url' => "https://shopee.vn/shop5nangtien",
+                                'url' => "https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,//"https://shopee.vn/shop5nangtien",
                                 "messenger_extensions" => false,
                                 'webview_height_ratio' => "tall",
                             ],
