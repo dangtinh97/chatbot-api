@@ -162,4 +162,16 @@ class FChatHelper
             'title' => $title
         ];
     }
+
+    /**
+     * @return string[]
+     */
+    public static function buttonMenu():array
+    {
+        return [
+            'type' => "postback",
+            'title' => "Menu",
+            'payload' => 'MENU'
+        ];
+    }
 }
