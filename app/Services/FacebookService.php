@@ -134,11 +134,13 @@ class FacebookService
      */
     public function buttonMenu($text,$statusConnect="NONE"):array
     {
-
+        //https://smaxcdn.s3.ap-southeast-1.amazonaws.com/bot/62a0ef5c1eb5791a6bafe125/card/c_62ab82a6d4cfe1e2dde91537-t_1655407452998-cropped-1655407452901.png flappy bird
+        //https://thientue.vn/images/tarot/tarot-card.png bai tarot
         $file = Storage::disk('public')->get('qc/5_nt_1.json');
         $data = json_decode($file,true);
         $item = $data[array_rand($data)];
-        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
+//        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
+        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/game/flappy-bird?fb_uid=".$this->fbUid,"Flappy Bird");
 
         $buttons = [];
         //FChatHelper::buttonConnect(),
@@ -158,11 +160,11 @@ class FacebookService
                     'elements' => [
                         [
                             "title" => $text,
-                            'image_url' => "https://thientue.vn/images/tarot/tarot-card.png",//$item['image'],
-                            'subtitle' => "Bói tarot hôm nay",//,"QC: ".$item['name']."\nGiá:".$item['price'],
+                            'image_url' => "https://storage.googleapis.com/datinee-dev/2391782_Screenshot_2014-02-13-09-25-44.png",//$item['image'],
+                            'subtitle' => "Game Flappy bird",//,"QC: ".$item['name']."\nGiá:".$item['price'],
                             'default_action' => [
                                 'type' => "web_url",
-                                'url' => "https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,//"https://shopee.vn/shop5nangtien",
+                                'url' => "https://tool.nguoila.online/game/flappy-bird?fb_uid=".$this->fbUid,//"https://shopee.vn/shop5nangtien",
                                 "messenger_extensions" => false,
                                 'webview_height_ratio' => "tall",
                             ],
@@ -306,7 +308,7 @@ class FacebookService
                             ],
                             'buttons' => [
                                 FChatHelper::buttonConnect(),
-                                FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot")
+                                FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot"),
                             ]
                         ]
                     ]
