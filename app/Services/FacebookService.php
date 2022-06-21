@@ -140,6 +140,7 @@ class FacebookService
         $data = json_decode($file,true);
         $item = $data[array_rand($data)];
 //        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
+//        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
         $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/game/dino?fb_uid=".$this->fbUid."?utm_source=haui_chatbot","Khủng Long Chạy Bộ");
 
         $buttons = [];
@@ -164,7 +165,7 @@ class FacebookService
                             'subtitle' => "Khủng Long Chạy Bộ",//,"QC: ".$item['name']."\nGiá:".$item['price'],
                             'default_action' => [
                                 'type' => "web_url",
-                                'url' => "https://tool.nguoila.online/game/flappy-bird?fb_uid=".$this->fbUid,//"https://shopee.vn/shop5nangtien",
+                                'url' => "https://tool.nguoila.online/game/dino?fb_uid=".$this->fbUid."?utm_source=haui_chatbot",//"https://shopee.vn/shop5nangtien",
                                 "messenger_extensions" => false,
                                 'webview_height_ratio' => "tall",
                             ],
@@ -297,7 +298,7 @@ class FacebookService
                     'template_type' => 'generic',
                     'elements' => [
                         [
-                            "title" => "Menu 01",
+                            "title" => "Bói bài tarot",
                             'image_url' => "https://thientue.vn/images/tarot/tarot-card.png",//$item['image'],
                             'subtitle' => "Bói tarot hôm nay",//,"QC: ".$item['name']."\nGiá:".$item['price'],
                             'default_action' => [
@@ -307,8 +308,9 @@ class FacebookService
                                 'webview_height_ratio' => "tall",
                             ],
                             'buttons' => [
-                                FChatHelper::buttonConnect(),
-                                FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot"),
+                                FChatHelper::buttonUrl("https://tool.nguoila.online/game/flappy-bird?fb_uid=".$this->fbUid,"Flappy bird"),
+                                FChatHelper::buttonUrl("https://tool.nguoila.online/game/dino?fb_uid=".$this->fbUid."?utm_source=haui_chatbot","Khủng long chạy bộ"),
+                                FChatHelper::buttonUrl("https://tool.nguoila.online/caro-online?fb_uid=".$this->fbUid."?utm_source=haui_chatbot","Chơi Caro online"),
                             ]
                         ]
                     ]
