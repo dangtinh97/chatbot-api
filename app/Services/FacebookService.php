@@ -140,7 +140,7 @@ class FacebookService
         $data = json_decode($file,true);
         $item = $data[array_rand($data)];
 //        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
-        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/game/flappy-bird?fb_uid=".$this->fbUid,"Flappy Bird");
+        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/game/dino?fb_uid=".$this->fbUid."?utm_source=haui_chatbot","Khủng Long Chạy Bộ");
 
         $buttons = [];
         //FChatHelper::buttonConnect(),
@@ -150,7 +150,7 @@ class FacebookService
         if($statusConnect===Connect::STATUS_FIND || $statusConnect===Connect::STATUS_BUSY) $buttons[] = FChatHelper::buttonDisconnect();
 
         $buttons[] = $buttonAdvertise;//array_push($buttons,$buttonAdvertise,FChatHelper::buttonUrl("https://tool.nguoila.online/caro-online?utm_source=haui_chatbot/$this->fbUid","Chơi cờ caro"));
-        $buttons[] = FChatHelper::buttonUrl("https://tool.nguoila.online/caro-online/$this->fbUid?utm_source=haui_chatbot","Chơi cờ caro");
+        $buttons[] = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid."?utm_source=haui_chatbot","Bói bài tarot");
         //phần này gắn quảng cáo ngay ban đầu.........
         $attachments =  [
             "attachment" => [
@@ -160,8 +160,8 @@ class FacebookService
                     'elements' => [
                         [
                             "title" => $text,
-                            'image_url' => "https://storage.googleapis.com/datinee-dev/2391782_Screenshot_2014-02-13-09-25-44.png",//$item['image'],
-                            'subtitle' => "Game Flappy bird",//,"QC: ".$item['name']."\nGiá:".$item['price'],
+                            'image_url' => "https://storage.googleapis.com/datinee-dev/dino-2.png",//$item['image'],
+                            'subtitle' => "Khủng Long Chạy Bộ",//,"QC: ".$item['name']."\nGiá:".$item['price'],
                             'default_action' => [
                                 'type' => "web_url",
                                 'url' => "https://tool.nguoila.online/game/flappy-bird?fb_uid=".$this->fbUid,//"https://shopee.vn/shop5nangtien",
