@@ -8,10 +8,13 @@ use App\Http\Responses\ResponseError;
 use App\Http\Responses\ResponseSuccess;
 use App\Models\Connect;
 use App\Models\User;
+use App\Repositories\BlockRepository;
 use App\Repositories\ConnectRepository;
+use App\Repositories\ImageRepository;
 use App\Repositories\LogRepository;
 use App\Repositories\OanTuTiRepository;
 use App\Repositories\UserRepository;
+use Facade\FlareClient\Api;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -21,15 +24,26 @@ class FacebookService
     protected $userRepository;
     protected $connectRepository;
     protected $oanTuTiRepository;
+    protected $blockRepository;
+    protected $imageRepository;
     /** @var User $user */
     protected $user;
     public $fbUid;
-    public function __construct(LogRepository $logRepository,UserRepository $userRepository,ConnectRepository $connectRepository,OanTuTiRepository $oanTuTiRepository)
+    public $blockConfig;
+    public function __construct(LogRepository $logRepository,UserRepository $userRepository,
+        ConnectRepository $connectRepository,
+        OanTuTiRepository $oanTuTiRepository,
+    BlockRepository $blockRepository,
+    ImageRepository $imageRepository
+    )
     {
         $this->logRepository = $logRepository;
         $this->userRepository = $userRepository;
         $this->connectRepository = $connectRepository;
         $this->oanTuTiRepository = $oanTuTiRepository;
+        $this->blockRepository = $blockRepository;
+        $this->imageRepository = $imageRepository;
+        $this->blockConfig();
     }
 
     public function webHook($data):ApiResponse
@@ -57,6 +71,8 @@ class FacebookService
 
         $resultText = $this->detectMessage($text);
         if($text==="#help" || $text==="#menu") return $this->menu();
+        if($text==="#girlw") return $this->viewGirlImage();
+
         if($resultText==="connect") return $this->connect($user);
         if($resultText==="disconnect") return $this->disconnect($user);
         if($resultText==="text") return $this->sendMessageText($user,$text);
@@ -134,25 +150,19 @@ class FacebookService
      */
     public function buttonMenu($text,$statusConnect="NONE"):array
     {
-        //https://smaxcdn.s3.ap-southeast-1.amazonaws.com/bot/62a0ef5c1eb5791a6bafe125/card/c_62ab82a6d4cfe1e2dde91537-t_1655407452998-cropped-1655407452901.png flappy bird
-        //https://thientue.vn/images/tarot/tarot-card.png bai tarot
-        $file = Storage::disk('public')->get('qc/5_nt_1.json');
-        $data = json_decode($file,true);
-        $item = $data[array_rand($data)];
-//        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
-//        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid,"Bói bài tarot");
-        $buttonAdvertise = FChatHelper::buttonUrl("https://tool.nguoila.online/game/dino?fb_uid=".$this->fbUid."?utm_source=haui_chatbot","Khủng Long Chạy Bộ");
+        $data = ($this->blockConfig->where('name','DEFINED')->first()->data);
+        $data = json_decode($data,true);
 
         $buttons = [];
-        //FChatHelper::buttonConnect(),
-        //            FChatHelper::buttonDisconnect(),
 
         if($statusConnect===Connect::STATUS_FREE) $buttons[] = FChatHelper::buttonConnect();
         if($statusConnect===Connect::STATUS_FIND || $statusConnect===Connect::STATUS_BUSY) $buttons[] = FChatHelper::buttonDisconnect();
-
-        $buttons[] = $buttonAdvertise;//array_push($buttons,$buttonAdvertise,FChatHelper::buttonUrl("https://tool.nguoila.online/caro-online?utm_source=haui_chatbot/$this->fbUid","Chơi cờ caro"));
-        $buttons[] = FChatHelper::buttonUrl("https://tool.nguoila.online/user-boi-bai-tarot/".$this->fbUid."?utm_source=haui_chatbot","Bói bài tarot");
-        //phần này gắn quảng cáo ngay ban đầu.........
+        /** @var array $buttonConfig */
+        $buttonConfig = &$data['attachment']['payload']['elements'][0]['buttons'];
+        $buttonConfig[] = $buttons[0];
+        $buttonConfig[0]['url'] = $buttonConfig[0]['url']."?fb_uid=".$this->fbUid;
+        $data['attachment']['payload']['elements'][0]['title'] = $text;
+//        dd($data);
         $attachments =  [
             "attachment" => [
                 'type' => 'template',
@@ -175,8 +185,7 @@ class FacebookService
                 ]
             ]
         ];
-//        dd($attachments);
-        return $attachments;
+        return $data;
     }
 
     public function connect($user):ApiResponse
@@ -258,7 +267,7 @@ class FacebookService
     {
         if(empty($text)) return "";
         $connect = ['#ketnoi','#batdau','#timnguoila','#connect'];
-        $disconnect = ['#pipi','#ketthuc','#tambiet','#disconnect'];
+        $disconnect = ['#pipi','#ketthuc','#tambiet','#disconnect','#ngatketnoi'];
         if(in_array($text,$connect)) return "connect";
         if(in_array($text,$disconnect)) return "disconnect";
         return "text";
@@ -318,6 +327,48 @@ class FacebookService
             ]
         ];
         FChatHelper::sendMessageText($fbUid,$attachments);
+        return new ResponseSuccess();
+    }
+
+    /**
+     * @return mixed
+     */
+    private function blockConfig()
+    {
+        $all = $this->blockRepository->all();
+        $this->blockConfig = $all;
+        return $all;
+    }
+
+    private function viewGirlImage():ApiResponse
+    {
+        $images = $this->imageRepository->randomImage('GIRL',1);
+        $url = $images[0]['url'];
+        $message = [
+            'attachment' => [
+                'type' => 'image',
+                'payload' => [
+                    'url' => $url,
+                    'is_reusable' => true
+                ]
+            ]
+        ];
+        FChatHelper::sendMessageText($this->fbUid,$message);
+        $this->help();
+        return new ResponseSuccess([],200,"Xem ảnh girls");
+    }
+
+    /**
+     * @return \App\Http\Responses\ApiResponse
+     */
+    private function help():ApiResponse
+    {
+        FChatHelper::sendMessageText($this->fbUid,"
+        Danh sách các lệnh:
+        - #ketnoi: Bắt đầu tìm bạn chat
+        - #ketthuc: Kết thúc chat
+        - #girlw: Xem ảnh gái xinh chọn lọc 
+        ");
         return new ResponseSuccess();
     }
 

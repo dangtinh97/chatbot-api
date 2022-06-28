@@ -30,4 +30,12 @@ class BaseRepository
     {
         return $this->model::query()->where($cond)->first();
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function all()
+    {
+        return $this->model::query()->get();
+    }
 }
