@@ -150,7 +150,7 @@ class FacebookService
      */
     public function buttonMenu($text,$statusConnect="NONE"):array
     {
-        $data = ($this->blockConfig->where('name','DEFINED')->first()->data);
+        $data = ($this->blockConfig->where('name','DEFAULT')->first()->data);
         $data = json_decode($data,true);
 
         $buttons = [];
