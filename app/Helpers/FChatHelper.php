@@ -69,7 +69,6 @@ class FChatHelper
             ],
             "message" => $send
         ];
-        dump($body);
         $body['messaging_type'] = 'MESSAGE_TAG';
         $body['tag'] = "CONFIRMED_EVENT_UPDATE";
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
