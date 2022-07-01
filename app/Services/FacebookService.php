@@ -152,7 +152,6 @@ class FacebookService
     {
         $data = ($this->blockConfig->where('name','DEFAULT')->first()->data);
         $data = json_decode($data,true);
-
         $buttons = [];
 
         if($statusConnect===Connect::STATUS_FREE) $buttons[] = FChatHelper::buttonConnect();
