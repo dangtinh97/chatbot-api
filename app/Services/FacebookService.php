@@ -48,9 +48,9 @@ class FacebookService
 
     public function webHook($data):ApiResponse
     {
-        $this->logRepository->create([
-            'data' => json_encode($data)
-        ]);
+//        $this->logRepository->create([
+//            'data' => json_encode($data)
+//        ]);
         if($data['object']!=="page") return new ResponseError();
         $messaging = $data['entry'][0]['messaging'][0];
         $senderId = $messaging['sender']['id'];
