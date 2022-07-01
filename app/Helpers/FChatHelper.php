@@ -71,7 +71,6 @@ class FChatHelper
         ];
         $body['messaging_type'] = 'MESSAGE_TAG';
         $body['tag'] = "CONFIRMED_EVENT_UPDATE";
-//        dd($body);
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -92,6 +91,7 @@ class FChatHelper
         $arr = json_decode($response,true);
         if(isset($arr['error']))
         {
+
 //            dd($response);
 //            dd($response);
 //            Mail::to(User::query()->where([

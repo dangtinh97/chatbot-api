@@ -152,7 +152,6 @@ class FacebookService
     {
         $data = ($this->blockConfig->where('name','DEFAULT')->first()->data);
         $data = json_decode($data,true);
-
         $buttons = [];
 
         if($statusConnect===Connect::STATUS_FREE) $buttons[] = FChatHelper::buttonConnect();
@@ -162,7 +161,6 @@ class FacebookService
         $buttonConfig[] = $buttons[0];
         $buttonConfig[0]['url'] = $buttonConfig[0]['url']."?fb_uid=".$this->fbUid;
         $data['attachment']['payload']['elements'][0]['title'] = $text;
-//        dd($data);
         $attachments =  [
             "attachment" => [
                 'type' => 'template',
