@@ -161,7 +161,6 @@ class FacebookService
         $buttonConfig[] = $buttons[0];
         $buttonConfig[0]['url'] = $buttonConfig[0]['url']."?fb_uid=".$this->fbUid;
         $data['attachment']['payload']['elements'][0]['title'] = $text;
-//        dd($data);
         $attachments =  [
             "attachment" => [
                 'type' => 'template',
