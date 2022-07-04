@@ -158,6 +158,7 @@ class FacebookService
         if($statusConnect===Connect::STATUS_FIND || $statusConnect===Connect::STATUS_BUSY) $buttons[] = FChatHelper::buttonDisconnect();
         /** @var array $buttonConfig */
         $buttonConfig = &$data['attachment']['payload']['elements'][0]['buttons'];
+        if(count($buttons) ===0 )  $buttons[] = FChatHelper::buttonConnect();
         $buttonConfig[] = $buttons[0];
         $buttonConfig[0]['url'] = $buttonConfig[0]['url']."?fb_uid=".$this->fbUid;
         $data['attachment']['payload']['elements'][0]['title'] = $text;
