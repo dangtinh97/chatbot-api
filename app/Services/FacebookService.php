@@ -135,7 +135,7 @@ class FacebookService
         $text = "Chào bạn, đây là tin nhắn mặc định\n- gõ #ketnoi để tìm người lạ\n- gõ #ketthuc để ngắt kết nối với ai đó.\nChúng tớ đang phát triển, rất mong được các bạn ủng hộ.
     \nChúng tớ có gì nào\n- 13/05/2022 Chúng tớ đã cập nhật lại page, có thể gửi tin nhắn văn bản. gửi hình ảnh.\n- 21/05/2022 Chúng tớ đã update có thể gửi tin nhắn liên tục ngoài 24h";
 
-        $message = $this->buttonMenu($text);
+        $message = $this->buttonMenu("Chào mừng bạn đã đến với Haui Chatbot");
 
         $send = FChatHelper::sendMessageText($user->fb_uid,$message);
         return new ResponseSuccess();
