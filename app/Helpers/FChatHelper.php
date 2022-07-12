@@ -92,7 +92,7 @@ class FChatHelper
         if(isset($arr['error']))
         {
 
-//            dd($response);
+            dd($response);
 //            dd($response);
 //            Mail::to(User::query()->where([
 //                'fb_uid' => '1343954529053153'
