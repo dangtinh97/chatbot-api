@@ -14,5 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::post('register','')
 Route::post('/webhook',[\App\Http\Controllers\UserController::class,'webhook']);

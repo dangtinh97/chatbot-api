@@ -19,39 +19,7 @@ class FChatHelper
         }, $texts);
     }
 
-    public static function sendMessage($to, $content)
-    {
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://fchat.vn/api/v1/message/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode([
-                'user_id' => $to,
-                'message' => [
-                    [
-                        'text' => $content
-                    ]
-                ]
-            ]),
-            CURLOPT_HTTPHEADER => array(
-                'Token: ' . config('chatbot.f_chat.token_bot'),
-                'Content-Type: application/json',
-            ),
-        ));
-
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-    }
-
-    public static function sendMessageText($to, $content)
+    public static function sendMessageText($to, $content,$messagingType="UPDATE")
     {
         $send = [];
         if(gettype($content)!=="array"){
@@ -63,14 +31,15 @@ class FChatHelper
         }
 
         $body = [
-//                "messaging_type" => "UPDATE",
             "recipient" => [
                 "id" => $to
             ],
             "message" => $send
         ];
-        $body['messaging_type'] = 'MESSAGE_TAG';
-        $body['tag'] = "CONFIRMED_EVENT_UPDATE";
+        $body['messaging_type'] = $messagingType;
+        $tag = ["POST_PURCHASE_UPDATE","ACCOUNT_UPDATE","CONFIRMED_EVENT_UPDATE"];
+        if($messagingType==="MESSAGE_TAG") $body['tag'] = $tag[array_rand($tag)];
+
         $tokenPage = base64_decode(config('chatbot.facebook.token_page'));
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -91,12 +60,7 @@ class FChatHelper
         $arr = json_decode($response,true);
         if(isset($arr['error']))
         {
-
             dd($response);
-//            dd($response);
-//            Mail::to(User::query()->where([
-//                'fb_uid' => '1343954529053153'
-//            ])->first())->send(new ErrorSendMessagePage($response));
         }
         curl_close($curl);
         return $response;
@@ -152,7 +116,6 @@ class FChatHelper
             },$replies)
         ];
     }
-
 
     public static function buttonUrl(string $url,string $title):array
     {
