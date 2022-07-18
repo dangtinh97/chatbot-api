@@ -161,9 +161,17 @@ class FacebookService
             'to_user_id' => $connect->from_user_id
         ]);
         $timeLast = $userConnected->user->updated_at->timestamp;
-        $hour = (time()-$timeLast) / (60*60*24);
-        $messageType = $hour>0.8 ? "MESSAGE_TAG" : "RESPONSE";
-        FChatHelper::sendMessageText($userConnected->user->fb_uid, FChatHelper::replaceBadWord($message),$messageType);
+        $hour = (time() - $timeLast) / (60 * 60 * 24);
+        $messageType = "";
+        $sendTo = $userConnected->user->fb_uid;
+        if($hour > 0.95){
+            $messageType = "MESSAGE_TAG";
+            $sendTo = $user->fb_uid;
+            $message = "Hệ thống không thể gửi tin nhắn cho người lạ(người lạ đã không truy cập trong 24h). Rất xin lỗi vì sự bất tiện này, bạn có thể kết nối với người khác để tiếp tục";
+        }else{
+            $messageType = "RESPONSE";
+        }
+        FChatHelper::sendMessageText($sendTo, FChatHelper::replaceBadWord($message), $messageType);
 
         return ((new ResponseSuccess([], 200, "SEND MESSAGE SUCCESS")));
     }
